@@ -26,6 +26,11 @@ var (
 	kzFrameUp1, kzFrameUp2, kzFrameUp3          *ebiten.Image
 	kzFrameDown1, kzFrameDown2, kzFrameDown3    *ebiten.Image
 	kzFrameRight1, kzFrameRight2, kzFrameRight3 *ebiten.Image
+
+	kzFrameDamagedLeft1, kzFrameDamagedLeft2, kzFrameDamagedLeft3    *ebiten.Image
+	kzFrameDamagedUp1, kzFrameDamagedUp2, kzFrameDamagedUp3          *ebiten.Image
+	kzFrameDamagedDown1, kzFrameDamagedDown2, kzFrameDamagedDown3    *ebiten.Image
+	kzFrameDamagedRight1, kzFrameDamagedRight2, kzFrameDamagedRight3 *ebiten.Image
 )
 
 func NewKidZombie(position, targetPosition *components.Position) *KidZombie {
@@ -89,6 +94,43 @@ func (kz *KidZombie) loadAnimations() {
 	)
 
 	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_right",
+		[]*ebiten.Image{
+			kzFrameDamagedRight1,
+			kzFrameDamagedRight2,
+			kzFrameDamagedRight3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_left",
+		[]*ebiten.Image{
+			kzFrameDamagedLeft1,
+			kzFrameDamagedLeft2,
+			kzFrameDamagedLeft3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_up",
+		[]*ebiten.Image{
+			kzFrameDamagedUp1,
+			kzFrameDamagedUp2,
+			kzFrameDamagedUp3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_down",
+		[]*ebiten.Image{
+			kzFrameDamagedDown1,
+			kzFrameDamagedDown2,
+			kzFrameDamagedDown3,
+		},
+		3,
+	)
+
+	enemyAnimatedSprite.RegisterAnimation(
 		"idle",
 		[]*ebiten.Image{
 			kzFrameDown1,
@@ -122,6 +164,21 @@ func (kz *KidZombie) loadEnemyFramesOnce() {
 		kzFrameRight1 = images.Mirror(kzFrameLeft1)
 		kzFrameRight2 = images.Mirror(kzFrameLeft2)
 		kzFrameRight3 = images.Mirror(kzFrameLeft3)
+
+		// Damaged
+		kzFrameDamagedLeft1 = load("assets/sprites/KidZombieDamaged/left1.png")
+		kzFrameDamagedLeft2 = load("assets/sprites/KidZombieDamaged/left2.png")
+		kzFrameDamagedLeft3 = load("assets/sprites/KidZombieDamaged/left3.png")
+		kzFrameDamagedUp1 = load("assets/sprites/KidZombieDamaged/up1.png")
+		kzFrameDamagedUp2 = load("assets/sprites/KidZombieDamaged/up2.png")
+		kzFrameDamagedUp3 = load("assets/sprites/KidZombieDamaged/up3.png")
+		kzFrameDamagedDown1 = load("assets/sprites/KidZombieDamaged/down1.png")
+		kzFrameDamagedDown2 = load("assets/sprites/KidZombieDamaged/down2.png")
+		kzFrameDamagedDown3 = load("assets/sprites/KidZombieDamaged/down3.png")
+		kzFrameDamagedRight1 = images.Mirror(kzFrameDamagedLeft1)
+		kzFrameDamagedRight2 = images.Mirror(kzFrameDamagedLeft2)
+		kzFrameDamagedRight3 = images.Mirror(kzFrameDamagedLeft3)
+
 	})
 }
 func generateKidZombieVelicity() *components.Velocity {

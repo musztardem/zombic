@@ -45,7 +45,9 @@ func (w *Weapon) ShootAt(targetPosition *components.Position) *Missle {
 		return nil
 	}
 
-	return NewMissle(w.BarrelPosition(), targetPosition)
+	direction := components.NormalFromPositions(w.BarrelPosition(), targetPosition)
+
+	return NewMissle(w.BarrelPosition(), direction)
 }
 
 func (w *Weapon) BarrelPosition() *components.Position {

@@ -21,6 +21,22 @@ assets/sprites/KidZombie/*
 !assets/sprites/KidZombie/left*.png
 !assets/sprites/KidZombie/up*.png
 !assets/sprites/KidZombie/down*.png
+# Damaged variants
+!assets/sprites/SkinnyZombieDamaged/
+assets/sprites/SkinnyZombieDamaged/*
+!assets/sprites/SkinnyZombieDamaged/left*.png
+!assets/sprites/SkinnyZombieDamaged/up*.png
+!assets/sprites/SkinnyZombieDamaged/down*.png
+!assets/sprites/BigZombieDamaged/
+assets/sprites/BigZombieDamaged/*
+!assets/sprites/BigZombieDamaged/left*.png
+!assets/sprites/BigZombieDamaged/up*.png
+!assets/sprites/BigZombieDamaged/down*.png
+!assets/sprites/KidZombieDamaged/
+assets/sprites/KidZombieDamaged/*
+!assets/sprites/KidZombieDamaged/left*.png
+!assets/sprites/KidZombieDamaged/up*.png
+!assets/sprites/KidZombieDamaged/down*.png
 
 /.vscode
 

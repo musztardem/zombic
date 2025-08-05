@@ -21,11 +21,17 @@ const (
 )
 
 var (
-	bigZombieFramesLoaded                       sync.Once
+	bigZombieFramesLoaded sync.Once
+
 	bzFrameLeft1, bzFrameLeft2, bzFrameLeft3    *ebiten.Image
 	bzFrameUp1, bzFrameUp2, bzFrameUp3          *ebiten.Image
 	bzFrameDown1, bzFrameDown2, bzFrameDown3    *ebiten.Image
 	bzFrameRight1, bzFrameRight2, bzFrameRight3 *ebiten.Image
+
+	bzFrameDamagedLeft1, bzFrameDamagedLeft2, bzFrameDamagedLeft3    *ebiten.Image
+	bzFrameDamagedUp1, bzFrameDamagedUp2, bzFrameDamagedUp3          *ebiten.Image
+	bzFrameDamagedDown1, bzFrameDamagedDown2, bzFrameDamagedDown3    *ebiten.Image
+	bzFrameDamagedRight1, bzFrameDamagedRight2, bzFrameDamagedRight3 *ebiten.Image
 )
 
 func NewBigZombie(position, targetPosition *components.Position) *BigZombie {
@@ -89,6 +95,43 @@ func (bz *BigZombie) loadAnimations() {
 	)
 
 	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_right",
+		[]*ebiten.Image{
+			bzFrameDamagedRight1,
+			bzFrameDamagedRight2,
+			bzFrameDamagedRight3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_left",
+		[]*ebiten.Image{
+			bzFrameDamagedLeft1,
+			bzFrameDamagedLeft2,
+			bzFrameDamagedLeft3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_up",
+		[]*ebiten.Image{
+			bzFrameDamagedUp1,
+			bzFrameDamagedUp2,
+			bzFrameDamagedUp3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_down",
+		[]*ebiten.Image{
+			bzFrameDamagedDown1,
+			bzFrameDamagedDown2,
+			bzFrameDamagedDown3,
+		},
+		3,
+	)
+
+	enemyAnimatedSprite.RegisterAnimation(
 		"idle",
 		[]*ebiten.Image{
 			bzFrameDown1,
@@ -122,6 +165,20 @@ func (bz *BigZombie) loadEnemyFramesOnce() {
 		bzFrameRight1 = images.Mirror(bzFrameLeft1)
 		bzFrameRight2 = images.Mirror(bzFrameLeft2)
 		bzFrameRight3 = images.Mirror(bzFrameLeft3)
+
+		// Damaged
+		bzFrameDamagedLeft1 = load("assets/sprites/BigZombieDamaged/left1.png")
+		bzFrameDamagedLeft2 = load("assets/sprites/BigZombieDamaged/left2.png")
+		bzFrameDamagedLeft3 = load("assets/sprites/BigZombieDamaged/left3.png")
+		bzFrameDamagedUp1 = load("assets/sprites/BigZombieDamaged/up1.png")
+		bzFrameDamagedUp2 = load("assets/sprites/BigZombieDamaged/up2.png")
+		bzFrameDamagedUp3 = load("assets/sprites/BigZombieDamaged/up3.png")
+		bzFrameDamagedDown1 = load("assets/sprites/BigZombieDamaged/down1.png")
+		bzFrameDamagedDown2 = load("assets/sprites/BigZombieDamaged/down2.png")
+		bzFrameDamagedDown3 = load("assets/sprites/BigZombieDamaged/down3.png")
+		bzFrameDamagedRight1 = images.Mirror(bzFrameDamagedLeft1)
+		bzFrameDamagedRight2 = images.Mirror(bzFrameDamagedLeft2)
+		bzFrameDamagedRight3 = images.Mirror(bzFrameDamagedLeft3)
 	})
 }
 

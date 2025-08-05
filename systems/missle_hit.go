@@ -1,8 +1,6 @@
 package systems
 
 import (
-	"fmt"
-
 	"github.com/musztardem/zombic/entities"
 )
 
@@ -14,8 +12,8 @@ func MissleHit(enemies *[]entities.EnemyBehaviour, missles *[]entities.Missle) {
 	for i, missle := range *missles {
 		for _, enemy := range *enemies {
 			if enemy.GetCollider().CollidesWith(missle.Collider) {
-				fmt.Println("Hit!")
-				enemy.MarkAsDead()
+				// enemy.MarkAsDead()
+				enemy.MarkAsHit()
 				(*missles)[i].IsRemovable = true
 			}
 		}

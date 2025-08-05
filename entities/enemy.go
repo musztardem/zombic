@@ -9,12 +9,23 @@ import (
 	"github.com/musztardem/zombic/vectors"
 )
 
+type EnemyState int
+
+const (
+	StateAttacking EnemyState = iota
+	StateHit
+	StateDead
+)
+
 type EnemyBehaviour interface {
 	Update([]*components.Collider) error
 	Draw(screen *ebiten.Image)
 	GetPosition() *components.Position
 	GetAnimation() *ebiten.Image
 	GetCollider() *components.Collider
+
+	// State management methods
+	MarkAsHit()
 	MarkAsDead()
 	IsDead() bool
 }
@@ -26,25 +37,46 @@ type Enemy struct {
 	TargetPosition *components.Position
 	Collider       *components.Collider
 	isDead         bool
+	State          EnemyState
+	hitCooldown    int
 }
 
 func (e *Enemy) Update(colliders []*components.Collider) error {
 	e.AnimatedSprite.Play("idle")
-
 	dx := e.TargetPosition.X - e.Position.X
 	dy := e.TargetPosition.Y - e.Position.Y
 	nVecX, nVecY := vectors.Normal(dx, dy)
 
 	e.handleMoveWithCollisions(nVecX, nVecY, colliders)
 
-	if nVecX > nVecY && nVecX > 0 {
-		e.AnimatedSprite.Play("walk_right")
-	} else if nVecX < nVecY && nVecX < 0 {
-		e.AnimatedSprite.Play("walk_left")
-	} else if nVecY > nVecX && nVecY > 0 {
-		e.AnimatedSprite.Play("walk_down")
-	} else if nVecY < nVecX && nVecY < 0 {
-		e.AnimatedSprite.Play("walk_up")
+	switch e.State {
+	case StateAttacking:
+		if nVecX > nVecY && nVecX > 0 {
+			e.AnimatedSprite.Play("walk_right")
+		} else if nVecX < nVecY && nVecX < 0 {
+			e.AnimatedSprite.Play("walk_left")
+		} else if nVecY > nVecX && nVecY > 0 {
+			e.AnimatedSprite.Play("walk_down")
+		} else if nVecY < nVecX && nVecY < 0 {
+			e.AnimatedSprite.Play("walk_up")
+		}
+
+	case StateHit:
+		if nVecX > nVecY && nVecX > 0 {
+			e.AnimatedSprite.Play("damaged_right")
+		} else if nVecX < nVecY && nVecX < 0 {
+			e.AnimatedSprite.Play("damaged_left")
+		} else if nVecY > nVecX && nVecY > 0 {
+			e.AnimatedSprite.Play("damaged_down")
+		} else if nVecY < nVecX && nVecY < 0 {
+			e.AnimatedSprite.Play("damaged_up")
+		}
+
+		e.hitCooldown--
+		if e.hitCooldown <= 0 {
+			e.State = StateAttacking
+			e.Velocity.Val = e.Velocity.Val * 3
+		}
 	}
 
 	e.updateCollider()
@@ -78,12 +110,22 @@ func (e *Enemy) GetCollider() *components.Collider {
 	return e.Collider
 }
 
+func (e *Enemy) MarkAsHit() {
+	// we want to slow down the enemy on the state transition
+	if e.State != StateHit {
+		e.Velocity.Val = e.Velocity.Val / 3
+	}
+
+	e.State = StateHit
+	e.hitCooldown = 30
+}
+
 func (e *Enemy) MarkAsDead() {
-	e.isDead = true
+	e.State = StateDead
 }
 
 func (e *Enemy) IsDead() bool {
-	return e.isDead
+	return e.State == StateDead
 }
 
 func (e *Enemy) updateCollider() {

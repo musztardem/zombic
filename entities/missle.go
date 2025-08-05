@@ -16,6 +16,8 @@ type Missle struct {
 	speed       float64
 	Collider    *components.Collider
 	IsRemovable bool
+	Lifetime    int
+	TicksLived  int
 }
 
 var (
@@ -23,14 +25,15 @@ var (
 	missleLoadedSprite *ebiten.Image
 )
 
-func NewMissle(position, targetPosition *components.Position) *Missle {
+func NewMissle(position *components.Position, direction *components.Direction) *Missle {
 	m := &Missle{
 		position: &components.Position{
 			X: position.X,
 			Y: position.Y,
 		},
-		direction: components.NormalFromPositions(position, targetPosition),
+		direction: direction,
 		speed:     5.0,
+		Lifetime:  5 * 60, // ~5 seconds
 	}
 	m.loadSprite()
 	m.updateCollider()

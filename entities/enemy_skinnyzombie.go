@@ -21,11 +21,17 @@ const (
 )
 
 var (
-	skinnyZombieFramesLoaded                    sync.Once
+	skinnyZombieFramesLoaded sync.Once
+
 	szFrameLeft1, szFrameLeft2, szFrameLeft3    *ebiten.Image
 	szFrameUp1, szFrameUp2, szFrameUp3          *ebiten.Image
 	szFrameDown1, szFrameDown2, szFrameDown3    *ebiten.Image
 	szFrameRight1, szFrameRight2, szFrameRight3 *ebiten.Image
+
+	szFrameDamagedLeft1, szFrameDamagedLeft2, szFrameDamagedLeft3    *ebiten.Image
+	szFrameDamagedUp1, szFrameDamagedUp2, szFrameDamagedUp3          *ebiten.Image
+	szFrameDamagedDown1, szFrameDamagedDown2, szFrameDamagedDown3    *ebiten.Image
+	szFrameDamagedRight1, szFrameDamagedRight2, szFrameDamagedRight3 *ebiten.Image
 )
 
 func NewSkinnyZombie(position, targetPosition *components.Position) *SkinnyZombie {
@@ -89,6 +95,43 @@ func (sz *SkinnyZombie) loadAnimations() {
 	)
 
 	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_right",
+		[]*ebiten.Image{
+			szFrameDamagedRight1,
+			szFrameDamagedRight2,
+			szFrameDamagedRight3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_left",
+		[]*ebiten.Image{
+			szFrameDamagedLeft1,
+			szFrameDamagedLeft2,
+			szFrameDamagedLeft3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_up",
+		[]*ebiten.Image{
+			szFrameDamagedUp1,
+			szFrameDamagedUp2,
+			szFrameDamagedUp3,
+		},
+		3,
+	)
+	enemyAnimatedSprite.RegisterAnimation(
+		"damaged_down",
+		[]*ebiten.Image{
+			szFrameDamagedDown1,
+			szFrameDamagedDown2,
+			szFrameDamagedDown3,
+		},
+		3,
+	)
+
+	enemyAnimatedSprite.RegisterAnimation(
 		"idle",
 		[]*ebiten.Image{
 			szFrameDown1,
@@ -122,6 +165,20 @@ func (sz *SkinnyZombie) loadEnemyFramesOnce() {
 		szFrameRight1 = images.Mirror(szFrameLeft1)
 		szFrameRight2 = images.Mirror(szFrameLeft2)
 		szFrameRight3 = images.Mirror(szFrameLeft3)
+
+		// Damaged
+		szFrameDamagedLeft1 = load("assets/sprites/SkinnyZombieDamaged/left1.png")
+		szFrameDamagedLeft2 = load("assets/sprites/SkinnyZombieDamaged/left2.png")
+		szFrameDamagedLeft3 = load("assets/sprites/SkinnyZombieDamaged/left3.png")
+		szFrameDamagedUp1 = load("assets/sprites/SkinnyZombieDamaged/up1.png")
+		szFrameDamagedUp2 = load("assets/sprites/SkinnyZombieDamaged/up2.png")
+		szFrameDamagedUp3 = load("assets/sprites/SkinnyZombieDamaged/up3.png")
+		szFrameDamagedDown1 = load("assets/sprites/SkinnyZombieDamaged/down1.png")
+		szFrameDamagedDown2 = load("assets/sprites/SkinnyZombieDamaged/down2.png")
+		szFrameDamagedDown3 = load("assets/sprites/SkinnyZombieDamaged/down3.png")
+		szFrameDamagedRight1 = images.Mirror(szFrameDamagedLeft1)
+		szFrameDamagedRight2 = images.Mirror(szFrameDamagedLeft2)
+		szFrameDamagedRight3 = images.Mirror(szFrameDamagedLeft3)
 	})
 }
 

@@ -43,6 +43,7 @@ func (g *Game) Update() error {
 
 	systems.ShootAtNearestEnemy(g.player, g.enemies, g.missles)
 	systems.MissleHit(g.enemies, g.missles)
+	systems.MissleMissed(g.missles)
 
 	return nil
 }

@@ -1,7 +1,7 @@
 package entities
 
 import (
-	"math/rand"
+	"math/rand/v2"
 
 	"github.com/musztardem/zombic/components"
 )

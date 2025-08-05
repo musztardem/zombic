@@ -24,7 +24,7 @@ func NewPlayer(position *components.Position, velocity *components.Velocity) *Pl
 	p := &Player{
 		Position: position,
 		Velocity: velocity,
-		Weapon:   NewWeapon(position, 45),
+		Weapon:   NewWeapon(position, 15),
 	}
 	p.loadAnimations()
 	// Collider is dependent on the frame size so animation needs to be loaded first
