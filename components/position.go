@@ -20,3 +20,10 @@ func (p *Position) Translate(dx, dy float64) *Position {
 		Y: p.Y + dy,
 	}
 }
+
+func (p *Position) DistanceTo(p2 *Position) float64 {
+	dx := p2.X - p.X
+	dy := p2.Y - p.Y
+
+	return math.Sqrt(dx*dx + dy*dy)
+}

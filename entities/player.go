@@ -17,21 +17,28 @@ type Player struct {
 	Position       *components.Position
 	Velocity       *components.Velocity
 	Collider       *components.Collider
+	Weapon         *Weapon
 }
 
 func NewPlayer(position *components.Position, velocity *components.Velocity) *Player {
 	p := &Player{
 		Position: position,
 		Velocity: velocity,
+		Weapon:   NewWeapon(position, 45),
 	}
 	p.loadAnimations()
-	// Collider is dependent on the frame size so animation needs to be loaded
+	// Collider is dependent on the frame size so animation needs to be loaded first
 	p.updateCollider()
 
 	return p
 }
 
-func (p *Player) Update() {
+func (p *Player) Update(enemies *[]EnemyBehaviour, missles *[]Missle) {
+	p.handleMovement()
+	p.Weapon.Update()
+}
+
+func (p *Player) handleMovement() {
 	p.AnimatedSprite.Play("idle")
 
 	var dx, dy float64
@@ -58,12 +65,15 @@ func (p *Player) Update() {
 	p.Position.Y += nVecY * p.Velocity.Val
 
 	p.updateCollider()
+	p.updateWeaponPosition()
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
 	opts := ebiten.DrawImageOptions{}
 	opts.GeoM.Translate(p.Position.X, p.Position.Y)
 	screen.DrawImage(p.AnimatedSprite.Get(), &opts)
+
+	p.Weapon.Draw(p.Weapon.position, screen)
 
 	if config.ColliderDebug {
 		opt2 := ebiten.DrawImageOptions{}
@@ -80,6 +90,10 @@ func (p *Player) updateCollider() {
 		Width:    float64(p.AnimatedSprite.Get().Bounds().Dx()),
 		Height:   float64(p.AnimatedSprite.Get().Bounds().Dy()),
 	}
+}
+
+func (p *Player) updateWeaponPosition() {
+	p.Weapon.position = p.Position
 }
 
 func (p *Player) loadAnimations() {
@@ -151,7 +165,7 @@ func (p *Player) loadAnimations() {
 	playerAnimatedSprite.RegisterAnimation(
 		"idle",
 		[]*ebiten.Image{
-			frameDown1,
+			frameRight1,
 		},
 		20,
 	)

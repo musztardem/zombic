@@ -7,6 +7,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/musztardem/zombic/components"
 	"github.com/musztardem/zombic/entities"
+	"github.com/musztardem/zombic/systems"
 )
 
 const (
@@ -18,11 +19,16 @@ type Game struct {
 	player  *entities.Player
 	spawner *entities.Spawner
 	enemies *[]entities.EnemyBehaviour
+	missles *[]entities.Missle
 }
 
 func (g *Game) Update() error {
-	g.player.Update()
+	g.player.Update(g.enemies, g.missles)
 	g.spawner.Update()
+
+	for _, missle := range *g.missles {
+		missle.Update()
+	}
 
 	enemyColliders := make([]*components.Collider, 0)
 	for _, enemy := range *g.enemies {
@@ -35,6 +41,9 @@ func (g *Game) Update() error {
 		}
 	}
 
+	systems.ShootAtNearestEnemy(g.player, g.enemies, g.missles)
+	systems.MissleHit(g.enemies, g.missles)
+
 	return nil
 }
 
@@ -44,6 +53,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	// Draw the player
 	g.player.Draw(screen)
+
+	for _, missle := range *g.missles {
+		missle.Draw(screen)
+	}
 
 	// Draw enemies
 	for _, enemy := range *g.enemies {
@@ -74,10 +87,10 @@ func main() {
 
 	spawnerPath := &components.Path{
 		Points: []*components.Position{
-			{X: -5.0, Y: -5.0},
-			{X: SCREEN_WIDTH + 5.0, Y: -5.0},
-			{X: SCREEN_WIDTH + 5.0, Y: SCREEN_HEIGHT + 5.0},
-			{X: -5.0, Y: SCREEN_HEIGHT + 5.0},
+			{X: -10.0, Y: -10.0},
+			{X: SCREEN_WIDTH + 10.0, Y: -10.0},
+			{X: SCREEN_WIDTH + 10.0, Y: SCREEN_HEIGHT + 10.0},
+			{X: -10.0, Y: SCREEN_HEIGHT + 10.0},
 		},
 	}
 
@@ -86,13 +99,16 @@ func main() {
 		&components.Velocity{Val: 1.0},
 		player.Position,
 		&enemies,
-		3,
+		0.5,
 	)
+
+	missles := make([]entities.Missle, 0)
 
 	game := &Game{
 		player:  player,
 		spawner: spawner,
 		enemies: &enemies,
+		missles: &missles,
 	}
 
 	if err := ebiten.RunGame(game); err != nil {

@@ -10,11 +10,11 @@ type Spawner struct {
 	pathFollowLoop  *components.PathFollowLoop
 	enemies         *[]EnemyBehaviour
 	playerPosition  *components.Position
-	secondsInterval int
-	timeCounter     int
+	secondsInterval float64
+	timeCounter     float64
 }
 
-func NewSpawner(path *components.Path, velocity *components.Velocity, playerPosition *components.Position, enemies *[]EnemyBehaviour, secondsInterval int) *Spawner {
+func NewSpawner(path *components.Path, velocity *components.Velocity, playerPosition *components.Position, enemies *[]EnemyBehaviour, secondsInterval float64) *Spawner {
 	return &Spawner{
 		pathFollowLoop:  components.NewPathFollowLoop(path, velocity),
 		playerPosition:  playerPosition,

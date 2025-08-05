@@ -15,6 +15,8 @@ type EnemyBehaviour interface {
 	GetPosition() *components.Position
 	GetAnimation() *ebiten.Image
 	GetCollider() *components.Collider
+	MarkAsDead()
+	IsDead() bool
 }
 
 type Enemy struct {
@@ -23,6 +25,7 @@ type Enemy struct {
 	Velocity       *components.Velocity
 	TargetPosition *components.Position
 	Collider       *components.Collider
+	isDead         bool
 }
 
 func (e *Enemy) Update(colliders []*components.Collider) error {
@@ -73,6 +76,14 @@ func (e *Enemy) GetAnimation() *ebiten.Image {
 
 func (e *Enemy) GetCollider() *components.Collider {
 	return e.Collider
+}
+
+func (e *Enemy) MarkAsDead() {
+	e.isDead = true
+}
+
+func (e *Enemy) IsDead() bool {
+	return e.isDead
 }
 
 func (e *Enemy) updateCollider() {
