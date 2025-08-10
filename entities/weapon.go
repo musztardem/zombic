@@ -2,6 +2,7 @@ package entities
 
 import (
 	"log"
+	"math"
 	"sync"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -14,8 +15,11 @@ type Shootable interface {
 }
 
 type Weapon struct {
-	sprite               *ebiten.Image
-	position             *components.Position
+	sprite         *ebiten.Image
+	position       *components.Position
+	spriteRotation float64
+	shouldMirror   bool
+
 	shootingSpeed        int // ticks interval == lesser is faster
 	shootingSpeedCounter int
 }
@@ -45,26 +49,49 @@ func (w *Weapon) ShootAt(targetPosition *components.Position) *Missle {
 		return nil
 	}
 
-	direction := components.NormalFromPositions(w.BarrelPosition(), targetPosition)
+	// Calculate direction vector
+	barrel := w.BarrelPosition()
+	dx := targetPosition.X - barrel.X
+	dy := targetPosition.Y - barrel.Y
 
-	return NewMissle(w.BarrelPosition(), direction)
+	// Set rotation so sprite points at target
+	w.spriteRotation = math.Atan2(dy, dx)
+
+	if targetPosition.X < w.position.X {
+		w.shouldMirror = true
+	} else {
+		w.shouldMirror = false
+	}
+
+	direction := components.NormalFromPositions(barrel, targetPosition)
+	return NewMissle(barrel, direction)
 }
 
 func (w *Weapon) BarrelPosition() *components.Position {
 	rect := w.sprite.Bounds()
 	rectMax := rect.Max
 
-	posX := float64(rectMax.X)
-	posY := float64(rectMax.Y) - (0.5 * float64(rect.Dy()))
+	offsetX := float64(rectMax.X)
+	offsetY := float64(rectMax.Y) - (0.5 * float64(rect.Dy()))
+
+	// Apply rotation
+	cosR := math.Cos(w.spriteRotation)
+	sinR := math.Sin(w.spriteRotation)
+	rotatedX := offsetX*cosR - offsetY*sinR
+	rotatedY := offsetX*sinR + offsetY*cosR
 
 	return &components.Position{
-		X: w.position.X + posX,
-		Y: w.position.Y + posY,
+		X: w.position.X + rotatedX,
+		Y: w.position.Y + rotatedY,
 	}
 }
 
 func (w *Weapon) Draw(playerPosition *components.Position, screen *ebiten.Image) {
 	opts := &ebiten.DrawImageOptions{}
+	if w.shouldMirror {
+		opts.GeoM.Scale(1, -1)
+	}
+	opts.GeoM.Rotate(w.spriteRotation)
 	opts.GeoM.Translate(playerPosition.X+1, playerPosition.Y+7)
 	screen.DrawImage(w.sprite, opts)
 }

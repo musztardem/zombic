@@ -2,7 +2,6 @@ package systems
 
 import (
 	"fmt"
-	"math"
 
 	"github.com/musztardem/zombic/components"
 	"github.com/musztardem/zombic/entities"
@@ -19,17 +18,7 @@ func ShootAtNearestEnemy(player *entities.Player, enemies *[]entities.EnemyBehav
 		return
 	}
 
-	var nearestEnemyPosition *components.Position
-	var distance float64 = math.MaxFloat64
-
-	for _, enemy := range *enemies {
-		currentDistance := player.Position.DistanceTo(enemy.GetPosition())
-		if currentDistance < distance {
-			distance = currentDistance
-			nearestEnemyPosition = enemy.GetPosition()
-		}
-	}
-
+	nearestEnemyPosition := FindNearestEnemyPosition(player, enemies)
 	newTargetPosition := &components.Position{
 		X: nearestEnemyPosition.X,
 		Y: nearestEnemyPosition.Y,
