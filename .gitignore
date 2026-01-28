@@ -38,6 +38,9 @@ assets/sprites/KidZombieDamaged/*
 !assets/sprites/KidZombieDamaged/up*.png
 !assets/sprites/KidZombieDamaged/down*.png
 
+!assets/sprites/Pickable
+assets/sprites/Pickable/*
+!assets/sprites/Pickable/shotgun.png
 /.vscode
 
 .DS_Store
